@@ -19,11 +19,10 @@ public class CategoryController {
 
     @GetMapping("/category")
     public ResponseEntity<?> getAllCategory(){
-        List<Category> categories = categoryRepository.findAll();
-        if (categories.isEmpty()){
+        if (categoryIsEmpty()){
             return ResponseEntity.notFound().build();
         }else{
-            return ResponseEntity.ok(categories);
+            return ResponseEntity.ok(categoryRepository.findAll());
         }
     }
 
@@ -49,6 +48,34 @@ public class CategoryController {
         }else {
             return new ResponseEntity<>(changeNameCategory(category, id), HttpStatus.OK);
         }
+    }
+
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id) {
+        try {
+            if (categoryExists(id)){
+                categoryRepository.deleteById(id);
+                return ResponseEntity.noContent().build();
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/category")
+    public ResponseEntity<?> deleteAllCategory(){
+        if (categoryIsEmpty()){
+            return ResponseEntity.notFound().build();
+        }else{
+            categoryRepository.deleteAll();
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    private boolean categoryIsEmpty(){
+        return categoryRepository.findAll().isEmpty();
     }
 
     private boolean isShortName(Category category){
