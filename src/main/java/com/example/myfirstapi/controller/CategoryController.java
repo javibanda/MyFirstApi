@@ -34,6 +34,8 @@ public class CategoryController {
     public ResponseEntity<?> createNewCategory(@RequestBody Category newCategory){
         if (categoryExists(newCategory.getName())){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }else if ((newCategory.getName().length() < 3)){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
             return new ResponseEntity<>(saveCategory(newCategory), HttpStatus.CREATED);
         }
