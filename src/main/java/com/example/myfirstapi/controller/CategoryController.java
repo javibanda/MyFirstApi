@@ -26,4 +26,22 @@ public class CategoryController {
             return ResponseEntity.ok(categories);
         }
     }
+
+    @PostMapping("/category")
+    public ResponseEntity<?> createNewCategory(@RequestBody Category newCategory){
+        if (categoryExists(newCategory.getName())){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            return new ResponseEntity<>(saveCategory(newCategory), HttpStatus.CREATED);
+        }
+    }
+
+    private boolean categoryExists(String name){
+        List<Category> categoryList  = categoryRepository.findByName(name);
+        return !categoryList.isEmpty();
+    }
+
+    private Category saveCategory(Category category){
+        return categoryRepository.save(new Category(category.getName()));
+    }
 }
