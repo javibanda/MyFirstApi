@@ -16,6 +16,11 @@ import javax.persistence.Table;
 @Table(name = "category")
 public class Category {
 
+
+    public Category(String name){
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue
     private Long id;
